@@ -1,0 +1,507 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Colored Coins API documentation",
+    "description": "Abstraction for Colored Coins operations",
+    "version": "2.5.1"
+  },
+  "servers": [
+    {
+      "url": "/"
+    },
+    {
+      "url": "/v3"
+    }
+  ],
+  "paths": {
+    "/addressinfo/{address}": {
+      "get": {
+        "tags": [
+          "ColoredCoinsd"
+        ],
+        "operationId": "getAddressInfo",
+        "summary": "Returns information about UTXOs held by an address",
+        "description": "This API call is used to get all the assets for the address, this information is per utxo owned by the address, also retrives uncolored UTXOs",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "description": "Base58 address",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/addressInfoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gettransaction/{txid}": {
+      "get": {
+        "tags": [
+          "ColoredCoinsd"
+        ],
+        "operationId": "getTransactionByTxid",
+        "summary": "Returns information about a tx from its TXID",
+        "description": "This API call is used to get a transaction from its TXID",
+        "parameters": [
+          {
+            "name": "txid",
+            "in": "path",
+            "description": "The TXID of the transacion",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/transaction"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "addressInfoResponse": {
+        "required": [
+          "address",
+          "utxos"
+        ],
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "Requested address"
+          },
+          "utxos": {
+            "type": "array",
+            "description": "Array of ccUtxo objects",
+            "items": {
+              "$ref": "#/components/schemas/ccUtxo"
+            }
+          }
+        }
+      },
+      "assetInfo": {
+        "required": [
+          "assetId",
+          "amount",
+          "issueTxid",
+          "divisibility",
+          "lockStatus"
+        ],
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Total amount of the asset"
+          },
+          "assetId": {
+            "type": "string",
+            "description": "ID of the asset"
+          },
+          "issueTxid": {
+            "type": "string",
+            "description": "Issuance transaction ID"
+          },
+          "divisibility": {
+            "type": "integer",
+            "format": "int32",
+            "description": "How divisible is the asset"
+          },
+          "lockStatus": {
+            "type": "boolean",
+            "description": "Was the issuance locked"
+          },
+          "aggregationPolicy": {
+            "type": "string",
+            "description": "Aggregation policy"
+          }
+        }
+      },
+      "ccData": {
+        "required": [
+          "protocol",
+          "version",
+          "type",
+          "multisig"
+        ],
+        "properties": {
+          "payments": {
+            "type": "array",
+            "description": "",
+            "items": {
+              "$ref": "#/components/schemas/payment"
+            }
+          },
+          "protocol": {
+            "type": "integer",
+            "description": "Protocol number"
+          },
+          "version": {
+            "type": "integer",
+            "description": "Version of the payment"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of payment"
+          },
+          "multisig": {
+            "type": "array",
+            "description": "List of multisig",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ccUtxo": {
+        "required": [
+          "txid",
+          "index",
+          "value",
+          "blockheight",
+          "used",
+          "assets",
+          "scriptPubKey"
+        ],
+        "properties": {
+          "index": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Index of the UTXO in the transaction"
+          },
+          "txid": {
+            "type": "string",
+            "description": "ID of the transaction"
+          },
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Value of the UTXO, in satoshi"
+          },
+          "blockheight": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Block height"
+          },
+          "used": {
+            "type": "boolean",
+            "description": "Flag to show if UTXO was spent"
+          },
+          "assets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/assetInfo"
+            },
+            "description": "List of assets held in the UTXO"
+          },
+          "scriptPubKey": {
+            "$ref": "#/components/schemas/scriptPubKey"
+          }
+        }
+      },
+      "payment": {
+        "required": [
+          "range",
+          "output",
+          "input",
+          "percent",
+          "amount"
+        ],
+        "properties": {
+          "range": {
+            "type": "boolean",
+            "description": "Wheter payment is in range"
+          },
+          "output": {
+            "type": "integer",
+            "description": "Output index"
+          },
+          "input": {
+            "type": "integer",
+            "description": "Input index"
+          },
+          "percent": {
+            "type": "boolean",
+            "description": "Wheter amount has been provided in percentage"
+          },
+          "amount": {
+            "type": "integer",
+            "description": "Paid amount"
+          }
+        }
+      },
+      "scriptPubKey": {
+        "required": [
+          "asm",
+          "hex",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "asm": {
+            "type": "string",
+            "description": "Asm for the output"
+          },
+          "hex": {
+            "type": "string",
+            "description": "Hex for the output"
+          },
+          "type": {
+            "type": "string",
+            "description": "Bitcoin output type"
+          },
+          "reqSigs": {
+            "type": "integer",
+            "description": "Number of required signatures to redeem"
+          },
+          "adresses": {
+            "type": "array",
+            "description": "List of addresses that can redeem",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "scriptSig": {
+        "required": [
+          "asm",
+          "hex"
+        ],
+        "type": "object",
+        "properties": {
+          "asm": {
+            "type": "string",
+            "description": "Asm inside the scriptSig"
+          },
+          "hex": {
+            "type": "string",
+            "description": "Hex inside the scriptSig"
+          }
+        }
+      },
+      "transaction": {
+        "required": [
+          "txid",
+          "hash",
+          "version",
+          "size",
+          "vsize",
+          "weight",
+          "locktime",
+          "vin",
+          "vout",
+          "hex",
+          "blocktime",
+          "blockheight",
+          "colored",
+          "ccdata",
+          "iosparsed",
+          "ccparsed",
+          "overflow"
+        ],
+        "type": "object",
+        "properties": {
+          "txid": {
+            "type": "string",
+            "description": "ID of the transaction"
+          },
+          "hash": {
+            "type": "string",
+            "description": "Hash of the transaction"
+          },
+          "version": {
+            "type": "integer",
+            "description": "Version of protocol"
+          },
+          "size": {
+            "type": "integer",
+            "description": "Size of the transaction"
+          },
+          "vsize": {
+            "type": "integer",
+            "description": "Virtual size of the transaction"
+          },
+          "weight": {
+            "type": "integer",
+            "description": "Weight of the transaction"
+          },
+          "locktime": {
+            "type": "integer",
+            "description": "Locktime of the transaction"
+          },
+          "vin": {
+            "type": "array",
+            "description": "Array of vin objects",
+            "items": {
+              "$ref": "#/components/schemas/vin"
+            }
+          },
+          "vout": {
+            "type": "array",
+            "description": "Array of vout objects",
+            "items": {
+              "$ref": "#/components/schemas/vout"
+            }
+          },
+          "hex": {
+            "type": "string",
+            "description": "Hex of the transaction"
+          },
+          "blocktime": {
+            "type": "integer",
+            "description": "Block time"
+          },
+          "blockheight": {
+            "type": "integer",
+            "description": "Block height"
+          },
+          "colored": {
+            "type": "boolean",
+            "description": "Whether the transaction is colored"
+          },
+          "ccdata": {
+            "type": "array",
+            "description": "Array of ccData objects",
+            "items": {
+              "$ref": "#/components/schemas/ccData"
+            }
+          },
+          "iosparsed": {
+            "type": "boolean",
+            "description": "Whether the tx has been iosparsed"
+          },
+          "ccparsed": {
+            "type": "boolean",
+            "description": "Whether the tx has been ccparsed"
+          },
+          "overflow": {
+            "type": "boolean",
+            "description": "Whether there has been overflow"
+          },
+          "blockhash": {
+            "type": "string",
+            "description": "Hash of the block including the transaction"
+          },
+          "time": {
+            "type": "integer",
+            "description": "Block time"
+          },
+          "doubleSpent": {
+            "type": "boolean",
+            "description": "Whether there has been a double spend"
+          },
+          "tries": {
+            "type": "integer",
+            "description": "Number of tries"
+          }
+        }
+      },
+      "vin": {
+        "required": [
+          "txid",
+          "vout",
+          "scriptSig"
+        ],
+        "type": "object",
+        "properties": {
+          "txid": {
+            "type": "string",
+            "description": "ID of the transaction"
+          },
+          "vout": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Index of the output"
+          },
+          "scriptSig": {
+            "$ref": "#/components/schemas/scriptSig"
+          },
+          "sequence": {
+            "type": "integer",
+            "description": "Sequence number of the transaction"
+          },
+          "previousOutput": {
+            "$ref": "#/components/schemas/scriptPubKey"
+          },
+          "assets": {
+            "type": "array",
+            "description": "Array of assetInfo objects",
+            "items": {
+              "$ref": "#/components/schemas/assetInfo"
+            }
+          },
+          "value": {
+            "type": "integer",
+            "description": "Value of the UTXO, in satoshi"
+          },
+          "fixed": {
+            "type": "boolean",
+            "description": "Whether the input is fixed"
+          }
+        }
+      },
+      "vout": {
+        "required": [
+          "value",
+          "n",
+          "scriptPubKey"
+        ],
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Value of the UTXO, in satoshi"
+          },
+          "n": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Index of the output"
+          },
+          "scriptPubKey": {
+            "$ref": "#/components/schemas/scriptPubKey"
+          },
+          "assets": {
+            "type": "array",
+            "description": "Array of assetInfo objects",
+            "items": {
+              "$ref": "#/components/schemas/assetInfo"
+            }
+          },
+          "used": {
+            "type": "boolean",
+            "description": "Whether the output has been spent"
+          },
+          "blockheight": {
+            "type": "integer",
+            "description": "Block height"
+          }
+        }
+      }
+    }
+  }
+}

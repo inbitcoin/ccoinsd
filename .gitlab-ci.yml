@@ -1,0 +1,21 @@
+stages:
+  - lint
+
+default:
+  image: node:12.18-buster-slim
+  before_script:
+    - node --version
+    - npm --version
+    - whoami
+    - apt-get update
+    - apt-get install -y git
+    - npm install
+
+lint:
+  stage: lint
+  only:
+    refs:
+      - develop
+      - merge_request
+  script:
+    - npm run lint

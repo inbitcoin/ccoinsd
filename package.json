@@ -1,59 +1,41 @@
 {
-  "name": "colordcoinsd",
-  "version": "0.0.1",
-  "author": "",
-  "description": "Abstraction for Colored-Coins operations",
-  "contributors": [],
+  "name": "ccoinsd",
+  "version": "2.5.1",
+  "author": "inbitcoin s.r.l.",
+  "description": "Abstraction for Colored Coins operations",
   "main": "./app.js",
-  "keywords": [],
+  "keywords": [
+    "bitcoin",
+    "colored",
+    "coins",
+    "crypto",
+    "token"
+  ],
   "dependencies": {
-    "aws-sdk": "^2.1.17",
-    "bignumber.js": "^2.0.7",
-    "bitcoin": "git://github.com/rottev/node-bitcoin.git#master",
-    "bitcoinjs-lib": "~1.5.1",
-    "bitcore": "^0.9.5",
-    "bitcore-p2p": "^0.9.1",
-    "body-parser": "1.16.1",
-    "bs58check": "^1.0.3",
-    "cc-assetid-encoder": "^0.6.0",
-    "cc-errors": "~0.0.7",
-    "cc-request-id": "~0.0.3",
-    "cc-transaction": "^1.2.0",
-    "cls-middleware": "^1.1.0",
-    "continuation-local-storage": "^3.1.7",
-    "cors": "^2.7.1",
-    "express": "4.10.4",
-    "express-winston": "^2.1.0",
-    "lodash": "4.17.4",
-    "node-rest-client": "2.5.0",
-    "node-rsa": "^0.2.24",
-    "on-finished": "^2.3.0",
-    "piwik-tracker": "^0.1.2",
-    "q": "1.4.1",
-    "redis": "^0.12.1",
-    "swagger-node-express": "git://github.com/Colored-Coins/swagger-node.git#2.0.3-fix",
-    "swagger-validation": "~1.2",
-    "winston": "^2.3.0"
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "@inbitcoin/cerrors": "git://github.com/inbitcoin/cerrors.git#0.1.6",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "lodash": "^4.17.19",
+    "loglevel": "^1.6.8",
+    "morgan": "^1.10.0",
+    "swagger-ui-express": "^4.1.4",
+    "uuid": "^8.3.0"
   },
-  "noAnalyze": true,
   "engines": {
     "node": ">=0.10"
   },
   "devDependencies": {
-    "istanbul": "^0.3.20",
-    "mocha": "^2.3.3",
-    "supertest": "^1.1.0",
-    "xunit-file": "0.0.7"
-  },
-  "optionalDependencies": {},
-  "apidoc": {
-    "title": "ColordCoins api documentation",
-    "url": "http://localhost:8080"
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.6.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier-eslint": "^11.0.0"
   },
   "scripts": {
     "start": "node app.js",
-    "test": "mocha --recursive test --reporter-options=xunit.xml",
-    "ci-full": "istanbul cover _mocha -- -R xunit-file",
-    "test-windows": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha/ -- -R xunit-file && istanbul report html"
+    "lint": "eslint --ignore-path .gitignore .",
+    "lint-fix": "eslint --ignore-path .gitignore --fix ."
   }
 }
