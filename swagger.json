@@ -3,7 +3,7 @@
   "info": {
     "title": "Colored Coins API documentation",
     "description": "Abstraction for Colored Coins operations",
-    "version": "2.5.1"
+    "version": "2.5.2"
   },
   "servers": [
     {

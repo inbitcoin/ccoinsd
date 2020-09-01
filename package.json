@@ -1,6 +1,6 @@
 {
   "name": "ccoinsd",
-  "version": "2.5.1",
+  "version": "2.5.2",
   "author": "inbitcoin s.r.l.",
   "description": "Abstraction for Colored Coins operations",
   "main": "./app.js",
