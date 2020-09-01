@@ -31,8 +31,16 @@ RUN deluser ${USER} && \
 
 COPY --from=builder --chown=${USER}:${USER} ${APP} ${APP}
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 EXPOSE 8080
 USER ${USER}
 WORKDIR ${APP}
+
+HEALTHCHECK --interval=15s --timeout=4s --start-period=5s --retries=3 \
+    CMD curl -f 127.0.0.1:8080/is_running || exit 1
 
 ENTRYPOINT ["npm", "start"]

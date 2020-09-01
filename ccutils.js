@@ -34,7 +34,7 @@ module.exports = (function () {
   function getTransaction(txid) {
     return cexplorer.get('/api/gettransaction?txid=' + txid).then(function (response) {
       log.info('gettransaction status:', response.status)
-      log.debug('gettransaction data:', response.data)
+      log.debug('gettransaction data:', JSON.stringify(response.data))
       if (response.status == 200) {
         return response.data
       } else if (response.data) {
@@ -49,7 +49,7 @@ module.exports = (function () {
     addresses = { addresses: _.uniq(addresses) }
     return cexplorer.post('/api/getaddressesutxos', addresses).then(function (response) {
       log.info('getaddressesutxos status:', response.status)
-      log.debug('getaddressesutxos data:', response.data)
+      log.debug('getaddressesutxos data:', JSON.stringify(response.data))
       if (response.status == 200) {
         return response.data
       } else if (response.data) {
